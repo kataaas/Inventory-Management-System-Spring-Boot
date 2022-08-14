@@ -5,26 +5,3 @@ spring:
     open-in-view: true
     hibernate:
       ddl-auto: update
-
----
-spring:
-  config:
-    activate:
-      on-profile: dev
-  datasource:
-      url: jdbc:mysql://localhost:3306/IMS?createDatabaseIfNotExist=true
-      username: root
-      password: postgres
-      driver-class-name: com.mysql.cj.jdbc.Driver
-
----
-spring:
-  config:
-    activate:
-      on-profile: prod
-  datasource:
-    url: jdbc:h2:file:/data/IMS
-    username: admin
-    password: admin
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
