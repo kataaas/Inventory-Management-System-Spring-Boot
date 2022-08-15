@@ -32,7 +32,7 @@ public class UserEntity {
     @CreationTimestamp
     private Date createdAt;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private Set<CartEntity> cart;
 
     @Override

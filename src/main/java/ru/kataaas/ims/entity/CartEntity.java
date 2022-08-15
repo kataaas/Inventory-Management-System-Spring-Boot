@@ -2,7 +2,6 @@ package ru.kataaas.ims.entity;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "cart")
@@ -18,6 +17,6 @@ public class CartEntity {
 
     private boolean ordered;
 
-    private Date delivered;
+    private Date orderTime;
 
 }

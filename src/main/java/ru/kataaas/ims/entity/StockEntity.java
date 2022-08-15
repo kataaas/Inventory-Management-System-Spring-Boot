@@ -21,7 +21,10 @@ public class StockEntity {
 
     private int discountPercent;
 
-    @OneToMany
+    @OneToMany(mappedBy = "stock")
     private Set<ProductEntity> products;
+
+    @ManyToOne
+    private VendorEntity vendor;
 
 }

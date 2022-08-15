@@ -26,4 +26,7 @@ public class VendorEntity {
     @OneToMany(mappedBy = "vendor")
     private Set<ProductEntity> products;
 
+    @OneToMany(mappedBy = "vendor")
+    private Set<StockEntity> stocks;
+
 }
