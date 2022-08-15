@@ -11,9 +11,6 @@ import java.util.Set;
 public class CategoryEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     private String name;
 
     @OneToMany(mappedBy = "category")

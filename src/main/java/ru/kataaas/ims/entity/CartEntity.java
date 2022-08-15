@@ -1,6 +1,7 @@
 package ru.kataaas.ims.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -15,7 +16,8 @@ public class CartEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @OneToMany
-    private List<ProductEntity> products;
+    private boolean ordered;
+
+    private Date delivered;
 
 }
