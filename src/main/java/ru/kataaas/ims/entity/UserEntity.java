@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,6 +31,9 @@ public class UserEntity {
 
     @CreationTimestamp
     private Date createdAt;
+
+    @OneToMany
+    private Set<CartEntity> cart;
 
     @Override
     public boolean equals(Object o) {
