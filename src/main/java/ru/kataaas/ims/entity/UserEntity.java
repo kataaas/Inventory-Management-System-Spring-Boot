@@ -23,7 +23,7 @@ public class UserEntity {
 
     private String secondName;
 
-    private int phoneNumber;
+    private String phoneNumber;
 
     private String email;
 
