@@ -4,4 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.kataaas.ims.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
+
+    boolean existsByPhoneNumber(String phoneNumber);
+
+    boolean existsByEmail(String email);
+
 }

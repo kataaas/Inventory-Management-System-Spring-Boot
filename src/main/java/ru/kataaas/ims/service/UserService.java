@@ -29,4 +29,12 @@ public class UserService {
                 savedUser.getCreatedAt(), null);
     }
 
+    public boolean checkIfPhoneNumberAlreadyUsed(String phoneNumber) {
+        return userRepository.existsByPhoneNumber(phoneNumber);
+    }
+
+    public boolean checkIfEmailAlreadyUsed(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
 }
