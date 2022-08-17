@@ -4,6 +4,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -23,8 +25,12 @@ public class UserEntity {
 
     private String secondName;
 
+    @Column(unique = true)
+    @Pattern(regexp = "\\+7-\\d{3}-\\d{3}-\\d{2}-\\d{2}")
     private String phoneNumber;
 
+    @Email
+    @Column(unique = true)
     private String email;
 
     private String city;

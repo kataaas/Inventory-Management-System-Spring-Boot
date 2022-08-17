@@ -8,6 +8,8 @@ import ru.kataaas.ims.dto.RegisterDTO;
 import ru.kataaas.ims.dto.UserDTO;
 import ru.kataaas.ims.service.UserService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
@@ -19,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserDTO createUser(@RequestBody RegisterDTO registerDTO) {
+    public UserDTO createUser(@Valid @RequestBody RegisterDTO registerDTO) {
         return userService.create(registerDTO);
     }
 
