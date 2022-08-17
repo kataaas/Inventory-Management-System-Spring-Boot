@@ -4,8 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -21,18 +20,27 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private String firstName;
 
+    @NotNull
     private String secondName;
 
+    @NotNull
     @Column(unique = true)
     @Pattern(regexp = "\\+7-\\d{3}-\\d{3}-\\d{2}-\\d{2}")
     private String phoneNumber;
 
+    @NotNull
+    @Size(min = 8, max = 24)
+    private String password;
+
+    @NotNull
     @Email
     @Column(unique = true)
     private String email;
 
+    @NotNull
     private String city;
 
     @CreationTimestamp

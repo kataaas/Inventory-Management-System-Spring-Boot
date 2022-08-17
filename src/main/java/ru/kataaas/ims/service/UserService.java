@@ -20,6 +20,7 @@ public class UserService {
         user.setFirstName(registerDTO.getFirstName());
         user.setSecondName(registerDTO.getSecondName());
         user.setPhoneNumber(registerDTO.getPhoneNumber());
+        user.setPassword(registerDTO.getPassword());
         user.setEmail(registerDTO.getEmail());
         user.setCity(registerDTO.getCity());
 

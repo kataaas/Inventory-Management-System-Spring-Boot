@@ -3,6 +3,7 @@ package ru.kataaas.ims.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
@@ -15,15 +16,19 @@ public class StockEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private Date issued;
 
+    @NotNull
     private Date expiration;
 
+    @NotNull
     private int discountPercent;
 
     @OneToMany(mappedBy = "stock")
     private Set<ProductEntity> products;
 
+    @NotNull
     @ManyToOne
     private VendorEntity vendor;
 
