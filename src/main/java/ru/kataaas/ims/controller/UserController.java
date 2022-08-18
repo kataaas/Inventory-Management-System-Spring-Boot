@@ -29,7 +29,11 @@ public class UserController {
         if (userService.checkIfEmailAlreadyUsed(registerDTO.getEmail())) {
             return ResponseEntity.badRequest().body("The email is already in use");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(registerDTO));
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(registerDTO));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        }
     }
 
 }

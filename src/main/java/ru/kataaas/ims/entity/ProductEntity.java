@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -21,8 +22,10 @@ public class ProductEntity {
     private String name;
 
     @NotNull
+    @Min(0)
     private BigDecimal price;
 
+    @Min(0)
     private int quantity;
 
     @CreationTimestamp

@@ -19,7 +19,6 @@ public class StockEntity {
     @NotNull
     private Date issued;
 
-    @NotNull
     private Date expiration;
 
     @NotNull
