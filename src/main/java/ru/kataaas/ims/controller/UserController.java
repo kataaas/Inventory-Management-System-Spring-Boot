@@ -2,11 +2,9 @@ package ru.kataaas.ims.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.kataaas.ims.dto.RegisterDTO;
+import ru.kataaas.ims.dto.UserDTO;
 import ru.kataaas.ims.service.UserService;
 
 import javax.validation.Valid;
@@ -19,6 +17,11 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("/{id}")
+    public UserDTO fetchUser(@PathVariable Long id) {
+        return userService.findById(id);
     }
 
     @PostMapping("/register")

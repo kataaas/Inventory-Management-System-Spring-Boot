@@ -4,15 +4,26 @@ import org.springframework.stereotype.Service;
 import ru.kataaas.ims.dto.RegisterDTO;
 import ru.kataaas.ims.dto.UserDTO;
 import ru.kataaas.ims.entity.UserEntity;
+import ru.kataaas.ims.mapper.UserMapper;
 import ru.kataaas.ims.repository.UserRepository;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
 
+    private final UserMapper userMapper;
+
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserMapper userMapper, UserRepository userRepository) {
+        this.userMapper = userMapper;
         this.userRepository = userRepository;
+    }
+
+    public UserDTO findById(Long id) {
+        Optional<UserEntity> user = userRepository.findById(id);
+        return user.map(userMapper::toUserDTO).orElse(null);
     }
 
     public UserDTO create(RegisterDTO registerDTO) {
@@ -25,9 +36,7 @@ public class UserService {
         user.setCity(registerDTO.getCity());
 
         UserEntity savedUser = userRepository.save(user);
-        return new UserDTO(savedUser.getId(), savedUser.getFirstName(), savedUser.getSecondName(),
-                savedUser.getPhoneNumber(), savedUser.getEmail(), savedUser.getCity(),
-                savedUser.getCreatedAt(), null);
+        return userMapper.toUserDTO(savedUser);
     }
 
     public boolean checkIfPhoneNumberAlreadyUsed(String phoneNumber) {

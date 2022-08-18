@@ -2,11 +2,9 @@ package ru.kataaas.ims.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.kataaas.ims.dto.RegisterVendorDTO;
+import ru.kataaas.ims.dto.VendorDTO;
 import ru.kataaas.ims.service.VendorService;
 
 import javax.validation.Valid;
@@ -19,6 +17,11 @@ public class VendorController {
 
     public VendorController(VendorService vendorService) {
         this.vendorService = vendorService;
+    }
+
+    @GetMapping("/{name}")
+    public VendorDTO fetchVendor(@PathVariable String name) {
+        return vendorService.findByName(name);
     }
 
     @PostMapping("/register")

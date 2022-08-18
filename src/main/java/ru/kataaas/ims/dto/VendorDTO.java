@@ -2,11 +2,12 @@ package ru.kataaas.ims.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.Set;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class VendorDTO {
 
@@ -18,6 +19,6 @@ public class VendorDTO {
 
     private Date createdAt;
 
-    private Set<ProductDTO> products;
+    private int products;
 
 }
