@@ -23,6 +23,6 @@ public class CreateProductDTO {
     private int quantity;
 
     @NotNull
-    private CategoryDTO subCategory;
+    private String subcategory;
 
 }

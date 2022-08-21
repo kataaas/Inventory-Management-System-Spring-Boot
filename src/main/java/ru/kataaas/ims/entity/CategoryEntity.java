@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -18,6 +19,6 @@ public class CategoryEntity {
     private String category;
 
     @OneToMany(mappedBy = "category")
-    private Set<ProductEntity> products;
+    private Set<ProductEntity> products = new HashSet<>();
 
 }

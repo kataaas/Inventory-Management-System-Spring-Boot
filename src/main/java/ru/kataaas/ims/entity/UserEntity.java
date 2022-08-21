@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -47,7 +48,7 @@ public class UserEntity {
     private Date createdAt;
 
     @OneToMany(mappedBy = "user")
-    private Set<CartEntity> cart;
+    private Set<CartEntity> cart = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

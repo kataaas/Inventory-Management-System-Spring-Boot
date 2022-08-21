@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -25,7 +26,7 @@ public class StockEntity {
     private int discountPercent;
 
     @OneToMany(mappedBy = "stock")
-    private Set<ProductEntity> products;
+    private Set<ProductEntity> products = new HashSet<>();
 
     @NotNull
     @ManyToOne

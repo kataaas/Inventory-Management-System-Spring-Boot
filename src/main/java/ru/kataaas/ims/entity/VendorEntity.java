@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -34,9 +35,9 @@ public class VendorEntity {
     private Date createdAt;
 
     @OneToMany(mappedBy = "vendor")
-    private Set<ProductEntity> products;
+    private Set<ProductEntity> products = new HashSet<>();
 
     @OneToMany(mappedBy = "vendor")
-    private Set<StockEntity> stocks;
+    private Set<StockEntity> stocks = new HashSet<>();
 
 }

@@ -21,6 +21,10 @@ public class VendorService {
         this.vendorRepository = vendorRepository;
     }
 
+    public VendorEntity findById(Long id) {
+        return vendorRepository.findById(id).orElse(null);
+    }
+
     public VendorDTO findByName(String name) {
         Optional<VendorEntity> vendor = vendorRepository.findByName(name);
         return vendor.map(vendorMapper::toVendorDTO).orElse(null);

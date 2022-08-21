@@ -18,7 +18,7 @@ public class ProductMapper {
         productDTO.setCreatedAt(product.getCreatedAt());
         productDTO.setCategory(toCategoryDTO(product.getCategory()));
         productDTO.setVendorName(product.getVendor().getName());
-        productDTO.setDiscountPercent(product.getStock().getDiscountPercent());
+        productDTO.setDiscountPercent(product.getStock() != null ? product.getStock().getDiscountPercent() : 0);
 
         return productDTO;
     }
