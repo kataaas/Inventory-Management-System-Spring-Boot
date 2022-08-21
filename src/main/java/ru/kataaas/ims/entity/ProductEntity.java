@@ -21,8 +21,8 @@ public class ProductEntity {
     @NotNull
     private String name;
 
+    @Min(1)
     @NotNull
-    @Min(0)
     private BigDecimal price;
 
     @Min(0)

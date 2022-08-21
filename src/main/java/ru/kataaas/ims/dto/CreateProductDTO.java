@@ -4,16 +4,14 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Data
-public class ProductDTO {
+public class CreateProductDTO {
 
     @NotNull
-    private Long id;
-
-    @NotNull
+    @Size(min = 3, max = 45)
     private String name;
 
     @Min(1)
@@ -25,14 +23,6 @@ public class ProductDTO {
     private int quantity;
 
     @NotNull
-    private Date createdAt;
-
-    @NotNull
-    private CategoryDTO category;
-
-    @NotNull
-    private String vendorName;
-
-    private int discountPercent;
+    private CategoryDTO subCategory;
 
 }
