@@ -3,6 +3,7 @@ package ru.kataaas.ims.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data
@@ -11,7 +12,10 @@ import java.util.Set;
 public class CategoryEntity {
 
     @Id
-    private String name;
+    private String subcategory;
+
+    @NotNull
+    private String category;
 
     @OneToMany(mappedBy = "category")
     private Set<ProductEntity> products;
