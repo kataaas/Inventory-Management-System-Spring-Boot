@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kataaas.ims.dto.RegisterDTO;
 import ru.kataaas.ims.dto.UserDTO;
+import ru.kataaas.ims.mapper.UserMapper;
 import ru.kataaas.ims.service.UserService;
 
 import javax.validation.Valid;
@@ -13,15 +14,18 @@ import javax.validation.Valid;
 @RequestMapping("/api/v1/user")
 public class UserController {
 
+    private final UserMapper userMapper;
+
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserMapper userMapper, UserService userService) {
+        this.userMapper = userMapper;
         this.userService = userService;
     }
 
     @GetMapping("/{id}")
     public UserDTO fetchUser(@PathVariable Long id) {
-        return userService.findById(id);
+        return userMapper.toUserDTO(userService.findById(id));
     }
 
     @PostMapping("/register")

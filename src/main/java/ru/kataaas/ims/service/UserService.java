@@ -21,9 +21,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserDTO findById(Long id) {
+    public UserEntity findById(Long id) {
         Optional<UserEntity> user = userRepository.findById(id);
-        return user.map(userMapper::toUserDTO).orElse(null);
+        return user.orElse(null);
     }
 
     public UserDTO create(RegisterDTO registerDTO) {

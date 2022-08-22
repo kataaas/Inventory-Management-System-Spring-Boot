@@ -10,6 +10,8 @@ import ru.kataaas.ims.mapper.ProductMapper;
 import ru.kataaas.ims.repository.CategoryRepository;
 import ru.kataaas.ims.repository.ProductRepository;
 
+import java.util.Optional;
+
 @Service
 public class ProductService {
 
@@ -31,6 +33,10 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
+    public Optional<ProductEntity> findById(Long id) {
+        return productRepository.findById(id);
+    }
+
     public ProductDTO create(CreateProductDTO productDTO, Long vendorId) {
         ProductEntity product = new ProductEntity();
         VendorEntity vendor = vendorService.findById(vendorId);
@@ -48,6 +54,10 @@ public class ProductService {
 
     public CategoryEntity getCategoryBySubcategory(String subcategory) {
         return categoryRepository.getBySubcategory(subcategory);
+    }
+
+    public int getQuantityById(Long id) {
+        return productRepository.getQuantityProduct(id);
     }
 
 }

@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import java.io.Serializable;
 
 @Data
 @Entity
