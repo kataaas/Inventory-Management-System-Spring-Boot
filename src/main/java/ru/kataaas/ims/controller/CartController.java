@@ -26,7 +26,7 @@ public class CartController {
     @GetMapping
     public CartDTO fetchCart() {
         Optional<CartEntity> cart = cartService.fetchByUserId(1L);
-        return cart.map(cartMapper::toCartDTO).orElse(null);
+        return cart.map(cartMapper::toCartDTO).orElseGet(() -> null);
     }
 
 }

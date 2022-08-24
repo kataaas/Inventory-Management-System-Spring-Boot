@@ -41,16 +41,26 @@ public class CartService {
     }
 
     public void addProductToCart(Long userId, Long productId, int quantity) {
-        CartProductsEntity cartProducts = new CartProductsEntity();
         Optional<ProductEntity> product = productService.findById(productId);
-        CartEntity cart = cartRepository.getByUserIdAndOrderedFalse(userId).orElse(null);;
         if (product.isPresent()) {
-            if (cart == null) cart = create(userId);
-            cartProducts.setCartId(cart.getId());
-            cartProducts.setProductId(productId);
-            cartProducts.setCart(cart);
-            cartProducts.setProduct(product.get());
-            cartProducts.setQuantity(quantity);
+            CartEntity cart = cartRepository.getByUserIdAndOrderedFalse(userId).orElseGet(() -> create(userId));
+            Optional<CartProductsEntity> optionalCartProducts
+                    = cartProductsRepository.findByCartIdAndProductId(cart.getId(), productId);
+            CartProductsEntity cartProducts = null;
+
+            // if cartProducts is empty, create new object
+            if (optionalCartProducts.isEmpty()) {
+                cartProducts = new CartProductsEntity();
+                cartProducts.setCartId(cart.getId());
+                cartProducts.setProductId(productId);
+                cartProducts.setCart(cart);
+                cartProducts.setProduct(product.get());
+                cartProducts.setQuantity(quantity);
+            } else {
+                cartProducts = optionalCartProducts.get();
+                if (productService.getQuantityById(productId) >= cartProducts.getQuantity() + quantity)
+                    cartProducts.setQuantity(cartProducts.getQuantity() + quantity);
+            }
             cartProductsRepository.save(cartProducts);
         }
     }
