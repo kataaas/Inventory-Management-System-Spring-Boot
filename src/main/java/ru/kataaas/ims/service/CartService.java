@@ -8,6 +8,7 @@ import ru.kataaas.ims.entity.UserEntity;
 import ru.kataaas.ims.repository.CartProductsRepository;
 import ru.kataaas.ims.repository.CartRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,13 +32,20 @@ public class CartService {
         this.cartProductsRepository = cartProductsRepository;
     }
 
+    public Optional<CartEntity> fetchByUserId(Long userId) {
+        return cartRepository.getByUserIdAndOrderedFalse(userId);
+    }
+
+    public List<CartProductsEntity> findProductsByCartId(Long id) {
+        return cartProductsRepository.findProductsByCart_Id(id);
+    }
+
     public void addProductToCart(Long userId, Long productId, int quantity) {
         CartProductsEntity cartProducts = new CartProductsEntity();
         Optional<ProductEntity> product = productService.findById(productId);
         CartEntity cart = cartRepository.getByUserIdAndOrderedFalse(userId).orElse(null);;
         if (product.isPresent()) {
             if (cart == null) cart = create(userId);
-
             cartProducts.setCartId(cart.getId());
             cartProducts.setProductId(productId);
             cartProducts.setCart(cart);

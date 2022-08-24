@@ -3,6 +3,7 @@ package ru.kataaas.ims.service;
 import org.springframework.stereotype.Service;
 import ru.kataaas.ims.dto.CreateProductDTO;
 import ru.kataaas.ims.dto.ProductDTO;
+import ru.kataaas.ims.entity.CartProductsEntity;
 import ru.kataaas.ims.entity.CategoryEntity;
 import ru.kataaas.ims.entity.ProductEntity;
 import ru.kataaas.ims.entity.VendorEntity;
@@ -10,6 +11,7 @@ import ru.kataaas.ims.mapper.ProductMapper;
 import ru.kataaas.ims.repository.CategoryRepository;
 import ru.kataaas.ims.repository.ProductRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
