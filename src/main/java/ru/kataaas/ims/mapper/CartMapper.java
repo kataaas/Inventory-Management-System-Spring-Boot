@@ -24,10 +24,10 @@ public class CartMapper {
     public CartDTO toCartDTO(CartEntity cart) {
         CartDTO cartDTO = new CartDTO();
         List<ProductDTO> productsDTO = new ArrayList<>();
-        cartService.findProductsByCartId(cart.getId())
+        cartService.findProductsByCartId(cart.getUser().getId())
                 .forEach(cartProductsEntity ->
                         productsDTO.add(productMapper.toProductDTO(cartProductsEntity.getProduct())));
-        cartDTO.setId(cart.getId());
+        cartDTO.setId(cart.getUser().getId());
         cartDTO.setProducts(productsDTO);
 
         return cartDTO;

@@ -5,10 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kataaas.ims.dto.RegisterDTO;
 import ru.kataaas.ims.dto.UserDTO;
+import ru.kataaas.ims.entity.UserEntity;
 import ru.kataaas.ims.mapper.UserMapper;
 import ru.kataaas.ims.service.UserService;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -25,7 +27,8 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserDTO fetchUser(@PathVariable Long id) {
-        return userMapper.toUserDTO(userService.findById(id));
+        Optional<UserEntity> user = userService.findById(id);
+        return user.map(userMapper::toUserDTO).orElse(null);
     }
 
     @PostMapping("/register")

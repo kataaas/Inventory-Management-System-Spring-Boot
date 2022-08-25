@@ -33,7 +33,7 @@ public class CartService {
     }
 
     public Optional<CartEntity> fetchByUserId(Long userId) {
-        return cartRepository.getByUserIdAndOrderedFalse(userId);
+        return cartRepository.getByUserId(userId);
     }
 
     public List<CartProductsEntity> findProductsByCartId(Long id) {
@@ -43,11 +43,11 @@ public class CartService {
     public void addProductToCart(Long userId, Long productId, int quantity) {
         Optional<ProductEntity> product = productService.findById(productId);
         if (product.isPresent()) {
-            CartEntity cart = cartRepository.getByUserIdAndOrderedFalse(userId).orElseGet(() -> create(userId));
+            CartEntity cart = cartRepository.getByUserId(userId).orElseGet(() -> null);
+            assert cart != null;
             Optional<CartProductsEntity> optionalCartProducts
                     = cartProductsRepository.findByCartIdAndProductId(cart.getId(), productId);
             CartProductsEntity cartProducts = null;
-
             // if cartProducts is empty, create new object
             if (optionalCartProducts.isEmpty()) {
                 cartProducts = new CartProductsEntity();
@@ -65,11 +65,11 @@ public class CartService {
         }
     }
 
-    private CartEntity create(Long userId) {
+    public void create(Long userId) {
         CartEntity cart = new CartEntity();
-        UserEntity user = userService.findById(userId);
+        UserEntity user = userService.findById(userId).orElseGet(() -> null);
         cart.setUser(user);
-        return cartRepository.save(cart);
+        cartRepository.save(cart);
     }
 
 }

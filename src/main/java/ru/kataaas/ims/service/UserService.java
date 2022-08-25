@@ -1,5 +1,6 @@
 package ru.kataaas.ims.service;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import ru.kataaas.ims.dto.RegisterDTO;
 import ru.kataaas.ims.dto.UserDTO;
@@ -14,16 +15,20 @@ public class UserService {
 
     private final UserMapper userMapper;
 
+    private final CartService cartService;
+
     private final UserRepository userRepository;
 
-    public UserService(UserMapper userMapper, UserRepository userRepository) {
+    public UserService(UserMapper userMapper,
+                       @Lazy CartService cartService,
+                       UserRepository userRepository) {
         this.userMapper = userMapper;
+        this.cartService = cartService;
         this.userRepository = userRepository;
     }
 
-    public UserEntity findById(Long id) {
-        Optional<UserEntity> user = userRepository.findById(id);
-        return user.orElse(null);
+    public Optional<UserEntity> findById(Long id) {
+        return userRepository.findById(id);
     }
 
     public UserDTO create(RegisterDTO registerDTO) {
@@ -36,6 +41,7 @@ public class UserService {
         user.setCity(registerDTO.getCity());
 
         UserEntity savedUser = userRepository.save(user);
+        cartService.create(savedUser.getId());
         return userMapper.toUserDTO(savedUser);
     }
 
