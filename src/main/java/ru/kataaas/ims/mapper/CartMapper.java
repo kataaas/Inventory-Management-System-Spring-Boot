@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import ru.kataaas.ims.dto.CartDTO;
 import ru.kataaas.ims.dto.ProductDTO;
 import ru.kataaas.ims.entity.CartEntity;
-import ru.kataaas.ims.entity.ProductEntity;
 import ru.kataaas.ims.service.CartService;
 
 import java.util.ArrayList;
@@ -28,11 +27,8 @@ public class CartMapper {
         cartService.findProductsByCartId(cart.getId())
                 .forEach(cartProductsEntity ->
                         productsDTO.add(productMapper.toProductDTO(cartProductsEntity.getProduct())));
-
         cartDTO.setId(cart.getId());
         cartDTO.setProducts(productsDTO);
-        cartDTO.setOrdered(cart.isOrdered());
-        cartDTO.setOrderTime(cart.getOrderTime());
 
         return cartDTO;
     }

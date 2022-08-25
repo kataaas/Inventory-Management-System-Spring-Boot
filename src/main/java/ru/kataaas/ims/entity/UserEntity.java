@@ -47,8 +47,11 @@ public class UserEntity {
     @CreationTimestamp
     private Date createdAt;
 
+    @OneToOne(mappedBy = "user")
+    private CartEntity cart;
+
     @OneToMany(mappedBy = "user")
-    private Set<CartEntity> cart = new HashSet<>();
+    private Set<OrderEntity> orders = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

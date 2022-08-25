@@ -16,7 +16,6 @@ public class UserMapper {
         userDTO.setEmail(user.getEmail());
         userDTO.setCity(user.getCity());
         userDTO.setCreatedAt(user.getCreatedAt());
-        userDTO.setCart(user.getCart());
 
         return userDTO;
     }

@@ -3,10 +3,8 @@ package ru.kataaas.ims.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.kataaas.ims.entity.CartEntity;
 
 import java.util.Date;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -26,7 +24,5 @@ public class UserDTO {
     private String city;
 
     private Date createdAt;
-
-    private Set<CartEntity> cart;
 
 }
