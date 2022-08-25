@@ -13,6 +13,7 @@ import ru.kataaas.ims.repository.ProductRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProductService {
@@ -39,6 +40,16 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
+    public Set<ProductEntity> findProductsByIds(Set<Long> ids) {
+        return productRepository.findByIdIsIn(ids);
+    }
+
+    public void setQuantityProduct(Long id, int quantity) {
+        ProductEntity product = productRepository.findById(id).orElse(null);
+        if (product != null)
+            product.setQuantity(quantity);
+    }
+
     public ProductDTO create(CreateProductDTO productDTO, Long vendorId) {
         ProductEntity product = new ProductEntity();
         VendorEntity vendor = vendorService.findById(vendorId);
@@ -61,5 +72,4 @@ public class ProductService {
     public int getQuantityById(Long id) {
         return productRepository.getQuantityProduct(id);
     }
-
 }

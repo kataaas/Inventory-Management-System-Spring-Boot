@@ -10,11 +10,14 @@ import ru.kataaas.ims.repository.CartRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CartService {
 
     private final UserService userService;
+
+    private final OrderService orderService;
 
     private final CartRepository cartRepository;
 
@@ -23,10 +26,12 @@ public class CartService {
     private final CartProductsRepository cartProductsRepository;
 
     public CartService(UserService userService,
+                       OrderService orderService,
                        CartRepository cartRepository,
                        ProductService productService,
                        CartProductsRepository cartProductsRepository) {
         this.userService = userService;
+        this.orderService = orderService;
         this.cartRepository = cartRepository;
         this.productService = productService;
         this.cartProductsRepository = cartProductsRepository;
@@ -63,6 +68,19 @@ public class CartService {
             }
             cartProductsRepository.save(cartProducts);
         }
+    }
+
+    public void orderProducts(Set<Long> ids, Long userId) {
+        List<CartProductsEntity> cartProducts = cartProductsRepository.findByCartIdAndProductIdIsIn(userId, ids);
+        cartProducts.forEach(cartProduct -> {
+            // subtraction of ordered products from the products from the warehouse
+            int productLeft = productService.getQuantityById(cartProduct.getProductId()) - cartProduct.getQuantity();
+            if (productLeft >= 0) {
+                orderService.create(userId, cartProduct.getProductId(), cartProduct.getQuantity());
+                productService.setQuantityProduct(cartProduct.getProductId(), productLeft);
+                cartProductsRepository.delete(cartProduct);
+            }
+        });
     }
 
     public void create(Long userId) {
