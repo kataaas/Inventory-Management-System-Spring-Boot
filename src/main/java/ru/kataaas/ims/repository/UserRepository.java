@@ -5,6 +5,8 @@ import ru.kataaas.ims.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
+    UserEntity findByPhoneNumberOrEmail(String phoneNumber, String email);
+
     boolean existsByPhoneNumber(String phoneNumber);
 
     boolean existsByEmail(String email);

@@ -36,6 +36,10 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public UserEntity findByPhoneNumberOrEmail(String phoneNumber, String email) {
+        return userRepository.findByPhoneNumberOrEmail(phoneNumber, email);
+    }
+
     public UserDTO create(RegisterDTO registerDTO) {
         UserEntity user = new UserEntity();
         user.setFirstName(registerDTO.getFirstName());
