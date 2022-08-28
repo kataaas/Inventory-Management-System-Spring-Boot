@@ -33,7 +33,7 @@ public class UserEntity {
     private String phoneNumber;
 
     @NotNull
-    @Size(min = 8, max = 24)
+    @Size(min = 8)
     private String password;
 
     @NotNull

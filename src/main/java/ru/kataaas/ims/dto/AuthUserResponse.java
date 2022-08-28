@@ -7,7 +7,7 @@ public class AuthUserResponse {
 
     private Long id;
 
-    private String username;
+    private String login;
 
     private String accessToken;
 

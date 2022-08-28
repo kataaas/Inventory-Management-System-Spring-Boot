@@ -1,7 +1,9 @@
 package ru.kataaas.ims.service;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kataaas.ims.dto.RegisterDTO;
 import ru.kataaas.ims.dto.UserDTO;
 import ru.kataaas.ims.entity.UserEntity;
@@ -22,14 +24,18 @@ public class UserService {
 
     private final RoleRepository roleRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     public UserService(UserMapper userMapper,
                        @Lazy CartService cartService,
                        UserRepository userRepository,
-                       RoleRepository roleRepository) {
+                       RoleRepository roleRepository,
+                       @Lazy PasswordEncoder passwordEncoder) {
         this.userMapper = userMapper;
         this.cartService = cartService;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Optional<UserEntity> findById(Long id) {
@@ -40,12 +46,13 @@ public class UserService {
         return userRepository.findByPhoneNumberOrEmail(phoneNumber, email);
     }
 
+    @Transactional
     public UserDTO create(RegisterDTO registerDTO) {
         UserEntity user = new UserEntity();
         user.setFirstName(registerDTO.getFirstName());
         user.setSecondName(registerDTO.getSecondName());
         user.setPhoneNumber(registerDTO.getPhoneNumber());
-        user.setPassword(registerDTO.getPassword());
+        user.setPassword(passwordEncoder(registerDTO.getPassword()));
         user.setEmail(registerDTO.getEmail());
         user.setCity(registerDTO.getCity());
         user.getRoles().add(roleRepository.findByName("ROLE_USER"));
@@ -63,4 +70,7 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
+    private String passwordEncoder(String password) {
+        return passwordEncoder.encode(password);
+    }
 }
