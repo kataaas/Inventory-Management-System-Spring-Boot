@@ -6,6 +6,7 @@ import ru.kataaas.ims.dto.RegisterDTO;
 import ru.kataaas.ims.dto.UserDTO;
 import ru.kataaas.ims.entity.UserEntity;
 import ru.kataaas.ims.mapper.UserMapper;
+import ru.kataaas.ims.repository.RoleRepository;
 import ru.kataaas.ims.repository.UserRepository;
 
 import java.util.Optional;
@@ -19,12 +20,16 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final RoleRepository roleRepository;
+
     public UserService(UserMapper userMapper,
                        @Lazy CartService cartService,
-                       UserRepository userRepository) {
+                       UserRepository userRepository,
+                       RoleRepository roleRepository) {
         this.userMapper = userMapper;
         this.cartService = cartService;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     public Optional<UserEntity> findById(Long id) {
@@ -39,6 +44,7 @@ public class UserService {
         user.setPassword(registerDTO.getPassword());
         user.setEmail(registerDTO.getEmail());
         user.setCity(registerDTO.getCity());
+        user.getRoles().add(roleRepository.findByName("ROLE_USER"));
 
         UserEntity savedUser = userRepository.save(user);
         cartService.create(savedUser.getId());
