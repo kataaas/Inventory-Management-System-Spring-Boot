@@ -1,3 +1,7 @@
+app:
+  jwt-token-validity: 1314000000
+  jwt-secret-token: yd9O-cvXAC-keab2TAB-edYSAF-sdk
+
 spring:
   profiles:
     active: dev
@@ -7,3 +11,6 @@ spring:
     open-in-view: true
     hibernate:
       ddl-auto: update
+
+server:
+  port: 8081
