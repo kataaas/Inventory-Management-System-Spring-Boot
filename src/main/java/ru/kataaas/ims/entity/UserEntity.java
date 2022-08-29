@@ -7,7 +7,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -15,11 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "user")
 @RequiredArgsConstructor
-public class UserEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class UserEntity extends PersonEntity {
 
     @NotNull
     private String firstName;
@@ -53,22 +48,4 @@ public class UserEntity {
     @OneToMany(mappedBy = "user")
     private Set<OrderEntity> orders = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<RoleEntity> roles = new HashSet<>();
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserEntity that = (UserEntity) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

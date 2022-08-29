@@ -5,6 +5,7 @@ import ru.kataaas.ims.dto.RegisterVendorDTO;
 import ru.kataaas.ims.dto.VendorDTO;
 import ru.kataaas.ims.entity.VendorEntity;
 import ru.kataaas.ims.mapper.VendorMapper;
+import ru.kataaas.ims.repository.RoleRepository;
 import ru.kataaas.ims.repository.VendorRepository;
 
 import java.util.Optional;
@@ -14,10 +15,13 @@ public class VendorService {
 
     private final VendorMapper vendorMapper;
 
+    private final RoleRepository roleRepository;
+
     private final VendorRepository vendorRepository;
 
-    public VendorService(VendorMapper vendorMapper, VendorRepository vendorRepository) {
+    public VendorService(VendorMapper vendorMapper, RoleRepository roleRepository, VendorRepository vendorRepository) {
         this.vendorMapper = vendorMapper;
+        this.roleRepository = roleRepository;
         this.vendorRepository = vendorRepository;
     }
 
@@ -35,6 +39,7 @@ public class VendorService {
         vendor.setName(registerVendorDTO.getName());
         vendor.setEmail(registerVendorDTO.getEmail());
         vendor.setPassword(registerVendorDTO.getPassword());
+        vendor.getRoles().add(roleRepository.findByName("ROLE_VENDOR"));
 
         VendorEntity savedVendor = vendorRepository.save(vendor);
         return vendorMapper.toVendorDTO(savedVendor);

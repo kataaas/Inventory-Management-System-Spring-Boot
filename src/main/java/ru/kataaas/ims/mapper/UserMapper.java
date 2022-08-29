@@ -12,7 +12,7 @@ public class UserMapper {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setFirstName(user.getFirstName());
-        userDTO.setSecondName(userDTO.getSecondName());
+        userDTO.setSecondName(user.getSecondName());
         userDTO.setPhoneNumber(user.getPhoneNumber());
         userDTO.setEmail(user.getEmail());
         userDTO.setCity(user.getCity());
