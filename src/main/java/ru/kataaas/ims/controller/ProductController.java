@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.kataaas.ims.dto.CreateProductDTO;
 import ru.kataaas.ims.service.CartService;
 import ru.kataaas.ims.service.ProductService;
+import ru.kataaas.ims.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -15,23 +17,26 @@ public class ProductController {
 
     private final CartService cartService;
 
+    private final UserService userService;
+
     private final ProductService productService;
 
-    public ProductController(CartService cartService, ProductService productService) {
+    public ProductController(CartService cartService, UserService userService, ProductService productService) {
         this.cartService = cartService;
+        this.userService = userService;
         this.productService = productService;
     }
 
     @GetMapping("/{id}/addToCart")
-    public ResponseEntity<?> addProductToCart(@PathVariable Long id, @RequestParam(defaultValue = "1") int quantity) {
-        if (quantity > productService.getQuantityById(id)) {
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<?> addProductToCart(@PathVariable Long id, HttpServletRequest request,
+                                              @RequestParam(defaultValue = "1") int quantity) {
+        if (quantity > productService.getQuantityById(id)) return ResponseEntity.badRequest().build();
         try {
-            cartService.addProductToCart(1L, id, quantity);
+            String login = request.getUserPrincipal().getName();
+            Long userId = userService.findIdByPhoneNumber(login);
+            cartService.addProductToCart(userId, id, quantity);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
         }
     }

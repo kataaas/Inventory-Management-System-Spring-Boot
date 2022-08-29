@@ -13,7 +13,11 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "vendor")
-public class VendorEntity extends PersonEntity {
+public class VendorEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotNull
     @Column(unique = true)

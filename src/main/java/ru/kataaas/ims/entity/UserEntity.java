@@ -12,9 +12,13 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "user")
+@Table(name = "user_t")
 @RequiredArgsConstructor
-public class UserEntity extends PersonEntity {
+public class UserEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotNull
     private String firstName;

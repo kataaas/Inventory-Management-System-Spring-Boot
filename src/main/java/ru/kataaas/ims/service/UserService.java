@@ -38,6 +38,10 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public Long findIdByPhoneNumber(String phoneNumber) {
+        return userRepository.findIdByPhoneNumber(phoneNumber);
+    }
+
     public Optional<UserEntity> findById(Long id) {
         return userRepository.findById(id);
     }
