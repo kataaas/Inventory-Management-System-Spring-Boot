@@ -42,8 +42,8 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public UserEntity findByPhoneNumberOrEmail(String phoneNumber, String email) {
-        return userRepository.findByPhoneNumberOrEmail(phoneNumber, email);
+    public UserEntity findByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber);
     }
 
     @Transactional
@@ -52,7 +52,7 @@ public class UserService {
         user.setFirstName(registerDTO.getFirstName());
         user.setSecondName(registerDTO.getSecondName());
         user.setPhoneNumber(registerDTO.getPhoneNumber());
-        user.setPassword(passwordEncoder(registerDTO.getPassword()));
+        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
         user.setEmail(registerDTO.getEmail());
         user.setCity(registerDTO.getCity());
         user.getRoles().add(roleRepository.findByName("ROLE_USER"));
@@ -68,9 +68,5 @@ public class UserService {
 
     public boolean checkIfEmailAlreadyUsed(String email) {
         return userRepository.existsByEmail(email);
-    }
-
-    private String passwordEncoder(String password) {
-        return passwordEncoder.encode(password);
     }
 }

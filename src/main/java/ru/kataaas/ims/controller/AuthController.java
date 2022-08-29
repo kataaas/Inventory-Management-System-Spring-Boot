@@ -8,11 +8,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ru.kataaas.ims.dto.AuthUserResponse;
-import ru.kataaas.ims.dto.LoginDTO;
+import ru.kataaas.ims.dto.LoginUserDTO;
+import ru.kataaas.ims.dto.LoginVendorDTO;
 import ru.kataaas.ims.entity.UserEntity;
+import ru.kataaas.ims.entity.VendorEntity;
 import ru.kataaas.ims.mapper.UserMapper;
-import ru.kataaas.ims.service.CustomUserDetailsService;
+import ru.kataaas.ims.mapper.VendorMapper;
+import ru.kataaas.ims.service.CustomPersonDetailsService;
 import ru.kataaas.ims.service.UserService;
+import ru.kataaas.ims.service.VendorService;
 import ru.kataaas.ims.utils.JwtUtil;
 import ru.kataaas.ims.utils.StaticVariable;
 
@@ -30,38 +34,47 @@ public class AuthController {
 
     private final UserService userService;
 
+    private final VendorMapper vendorMapper;
+
+    private final VendorService vendorService;
+
     private final AuthenticationManager authenticationManager;
 
-    private final CustomUserDetailsService userDetailsService;
+    private final CustomPersonDetailsService userDetailsService;
 
     public AuthController(JwtUtil jwtUtil,
                           UserMapper userMapper,
                           UserService userService,
+                          VendorMapper vendorMapper,
+                          VendorService vendorService,
                           AuthenticationManager authenticationManager,
-                          CustomUserDetailsService userDetailsService) {
+                          CustomPersonDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userMapper = userMapper;
         this.userService = userService;
+        this.vendorMapper = vendorMapper;
+        this.vendorService = vendorService;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
     }
 
     @PostMapping("/user/auth")
-    public AuthUserResponse createAuthenticationToken(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
+    public AuthUserResponse createAuthenticationTokenForUser(@Valid @RequestBody LoginUserDTO loginDTO, HttpServletResponse response) {
         authenticate(loginDTO.getLogin(), loginDTO.getPassword());
-        UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTO.getLogin());
-        UserEntity user = userService.findByPhoneNumberOrEmail(loginDTO.getLogin(), loginDTO.getLogin());
-        String token = jwtUtil.generateJwtToken(userDetails);
-        Cookie jwtAuthToken = new Cookie(StaticVariable.SECURE_COOKIE, token);
-        jwtAuthToken.setHttpOnly(true);
-        jwtAuthToken.setSecure(false);
-        jwtAuthToken.setPath("/");
-        jwtAuthToken.setMaxAge(604800000); // 7 days
-        response.addCookie(jwtAuthToken);
+        UserEntity user = userService.findByPhoneNumber(loginDTO.getLogin());
+        String token = generateJwtAuthToken(loginDTO.getLogin(), response);
         return userMapper.toAuthResponse(user, token);
     }
 
-    @GetMapping("/user/logout")
+    @PostMapping("/vendor/auth")
+    public AuthUserResponse createAuthenticationTokenForVendor(@Valid @RequestBody LoginVendorDTO loginDTO, HttpServletResponse response) {
+        authenticate(loginDTO.getLogin(), loginDTO.getPassword());
+        VendorEntity vendor = vendorService.findByEmail(loginDTO.getLogin());
+        String token = generateJwtAuthToken(loginDTO.getLogin(), response);
+        return vendorMapper.toAuthResponse(vendor, token);
+    }
+
+    @GetMapping("/logout")
     public ResponseEntity<?> logoutUser(HttpServletResponse response) {
         Cookie cookie = new Cookie(StaticVariable.SECURE_COOKIE, null);
         cookie.setHttpOnly(true);
@@ -72,13 +85,25 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    private void authenticate(String phoneNumberOrEmail, String password) {
+    private void authenticate(String login, String password) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(phoneNumberOrEmail, password));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
         } catch (DisabledException e) {
             throw new DisabledException("USER_DISABLED", e);
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("INVALID_CREDENTIALS", e);
         }
+    }
+
+    private String generateJwtAuthToken(String login, HttpServletResponse response) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+        String token = jwtUtil.generateJwtToken(userDetails);
+        Cookie jwtAuthToken = new Cookie(StaticVariable.SECURE_COOKIE, token);
+        jwtAuthToken.setHttpOnly(true);
+        jwtAuthToken.setSecure(false);
+        jwtAuthToken.setPath("/");
+        jwtAuthToken.setMaxAge(604800000); // 7 days
+        response.addCookie(jwtAuthToken);
+        return token;
     }
 }

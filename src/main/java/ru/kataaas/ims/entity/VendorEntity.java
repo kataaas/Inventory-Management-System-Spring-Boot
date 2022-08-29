@@ -24,7 +24,7 @@ public class VendorEntity extends PersonEntity {
     private String email;
 
     @NotNull
-    @Size(min = 8, max = 24)
+    @Size(min = 8)
     private String password;
 
     @CreationTimestamp

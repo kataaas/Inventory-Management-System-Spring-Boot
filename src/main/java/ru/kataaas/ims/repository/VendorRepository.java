@@ -9,6 +9,8 @@ public interface VendorRepository extends JpaRepository<VendorEntity, Long> {
 
     Optional<VendorEntity> findByName(String name);
 
+    VendorEntity findByEmail(String email);
+
     boolean existsByName(String name);
 
     boolean existsByEmail(String email);

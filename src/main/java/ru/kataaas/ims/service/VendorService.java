@@ -1,5 +1,7 @@
 package ru.kataaas.ims.service;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.kataaas.ims.dto.RegisterVendorDTO;
 import ru.kataaas.ims.dto.VendorDTO;
@@ -17,16 +19,26 @@ public class VendorService {
 
     private final RoleRepository roleRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     private final VendorRepository vendorRepository;
 
-    public VendorService(VendorMapper vendorMapper, RoleRepository roleRepository, VendorRepository vendorRepository) {
+    public VendorService(VendorMapper vendorMapper,
+                         RoleRepository roleRepository,
+                         @Lazy PasswordEncoder passwordEncoder,
+                         VendorRepository vendorRepository) {
         this.vendorMapper = vendorMapper;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
         this.vendorRepository = vendorRepository;
     }
 
     public VendorEntity findById(Long id) {
         return vendorRepository.findById(id).orElse(null);
+    }
+
+    public VendorEntity findByEmail(String email) {
+        return vendorRepository.findByEmail(email);
     }
 
     public VendorDTO findByName(String name) {
@@ -38,7 +50,7 @@ public class VendorService {
         VendorEntity vendor = new VendorEntity();
         vendor.setName(registerVendorDTO.getName());
         vendor.setEmail(registerVendorDTO.getEmail());
-        vendor.setPassword(registerVendorDTO.getPassword());
+        vendor.setPassword(passwordEncoder.encode(registerVendorDTO.getPassword()));
         vendor.getRoles().add(roleRepository.findByName("ROLE_VENDOR"));
 
         VendorEntity savedVendor = vendorRepository.save(vendor);
