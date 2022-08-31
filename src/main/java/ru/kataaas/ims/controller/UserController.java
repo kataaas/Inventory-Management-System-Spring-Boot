@@ -3,7 +3,7 @@ package ru.kataaas.ims.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.kataaas.ims.dto.RegisterDTO;
+import ru.kataaas.ims.dto.RegisterUserDTO;
 import ru.kataaas.ims.dto.UserDTO;
 import ru.kataaas.ims.entity.UserEntity;
 import ru.kataaas.ims.mapper.UserMapper;
@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> createUser(@Valid @RequestBody RegisterDTO registerDTO) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody RegisterUserDTO registerDTO) {
         if (userService.checkIfPhoneNumberAlreadyUsed(registerDTO.getPhoneNumber())) {
             return ResponseEntity.badRequest().body("The phone number is already in use");
         }

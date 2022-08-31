@@ -27,16 +27,20 @@ public class CustomPersonDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String phoneNumberOrEmail) throws UsernameNotFoundException {
-        if (phoneNumberOrEmail.matches("\\+7-\\d{3}-\\d{3}-\\d{2}-\\d{2}$")) {
-            UserEntity user = userService.findByPhoneNumber(phoneNumberOrEmail);
-            if (user == null) throw new UsernameNotFoundException(phoneNumberOrEmail);
-            return new User(user.getPhoneNumber(), user.getPassword(), mapRolesToAuthorities("ROLE_USER"));
+    public UserDetails loadUserByUsername(String phoneNumberAndRole) throws UsernameNotFoundException {
+        String[] arr = phoneNumberAndRole.split(":");
+        String phoneNumber = arr[0];
+        String role = arr[1];
+        System.out.println(phoneNumber + " " + role);
+        if (role.equalsIgnoreCase("USER")) {
+            UserEntity user = userService.findByPhoneNumber(phoneNumber);
+            if (user == null) throw new UsernameNotFoundException(phoneNumber);
+            return new User(phoneNumberAndRole, user.getPassword(), mapRolesToAuthorities("ROLE_USER"));
         }
-        if (phoneNumberOrEmail.matches("^[A-z0-9._%+-]+@[A-z0-9.-]+\\.[A-z]{2,6}$")) {
-            VendorEntity vendor = vendorService.findByEmail(phoneNumberOrEmail);
-            if (vendor == null) throw new UsernameNotFoundException(phoneNumberOrEmail);
-            return new User(vendor.getEmail(), vendor.getPassword(), mapRolesToAuthorities("ROLE_VENDOR"));
+        if (role.equalsIgnoreCase("VENDOR")) {
+            VendorEntity vendor = vendorService.findByPhoneNumber(phoneNumber);
+            if (vendor == null) throw new UsernameNotFoundException(phoneNumber);
+            return new User(phoneNumberAndRole, vendor.getPassword(), mapRolesToAuthorities("ROLE_VENDOR"));
         }
         return null;
     }

@@ -8,8 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ru.kataaas.ims.dto.AuthUserResponse;
-import ru.kataaas.ims.dto.LoginUserDTO;
-import ru.kataaas.ims.dto.LoginVendorDTO;
+import ru.kataaas.ims.dto.LoginDTO;
 import ru.kataaas.ims.entity.UserEntity;
 import ru.kataaas.ims.entity.VendorEntity;
 import ru.kataaas.ims.mapper.UserMapper;
@@ -59,17 +58,17 @@ public class AuthController {
     }
 
     @PostMapping("/user/auth")
-    public AuthUserResponse createAuthenticationTokenForUser(@Valid @RequestBody LoginUserDTO loginDTO, HttpServletResponse response) {
+    public AuthUserResponse createAuthenticationTokenForUser(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         authenticate(loginDTO.getLogin(), loginDTO.getPassword());
-        UserEntity user = userService.findByPhoneNumber(loginDTO.getLogin());
+        UserEntity user = userService.findByPhoneNumber(loginDTO.getLogin().split(":")[0]);
         String token = generateJwtAuthToken(loginDTO.getLogin(), response);
         return userMapper.toAuthResponse(user, token);
     }
 
     @PostMapping("/vendor/auth")
-    public AuthUserResponse createAuthenticationTokenForVendor(@Valid @RequestBody LoginVendorDTO loginDTO, HttpServletResponse response) {
+    public AuthUserResponse createAuthenticationTokenForVendor(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         authenticate(loginDTO.getLogin(), loginDTO.getPassword());
-        VendorEntity vendor = vendorService.findByEmail(loginDTO.getLogin());
+        VendorEntity vendor = vendorService.findByPhoneNumber(loginDTO.getLogin().split(":")[0]);
         String token = generateJwtAuthToken(loginDTO.getLogin(), response);
         return vendorMapper.toAuthResponse(vendor, token);
     }

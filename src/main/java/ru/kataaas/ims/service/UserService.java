@@ -4,11 +4,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kataaas.ims.dto.RegisterDTO;
+import ru.kataaas.ims.dto.RegisterUserDTO;
 import ru.kataaas.ims.dto.UserDTO;
 import ru.kataaas.ims.entity.UserEntity;
 import ru.kataaas.ims.mapper.UserMapper;
-import ru.kataaas.ims.repository.RoleRepository;
 import ru.kataaas.ims.repository.UserRepository;
 
 import java.util.Optional;
@@ -22,19 +21,16 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final RoleRepository roleRepository;
 
     private final PasswordEncoder passwordEncoder;
 
     public UserService(UserMapper userMapper,
                        @Lazy CartService cartService,
                        UserRepository userRepository,
-                       RoleRepository roleRepository,
                        @Lazy PasswordEncoder passwordEncoder) {
         this.userMapper = userMapper;
         this.cartService = cartService;
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -51,7 +47,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO create(RegisterDTO registerDTO) {
+    public UserDTO create(RegisterUserDTO registerDTO) {
         UserEntity user = new UserEntity();
         user.setFirstName(registerDTO.getFirstName());
         user.setSecondName(registerDTO.getSecondName());
@@ -59,7 +55,6 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
         user.setEmail(registerDTO.getEmail());
         user.setCity(registerDTO.getCity());
-        user.getRoles().add(roleRepository.findByName("ROLE_USER"));
 
         UserEntity savedUser = userRepository.save(user);
         cartService.create(savedUser.getId());
