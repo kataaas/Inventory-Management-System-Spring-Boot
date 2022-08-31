@@ -7,7 +7,7 @@ import javax.validation.constraints.*;
 
 @Data
 @AllArgsConstructor
-public class RegisterDTO {
+public class RegisterUserDTO {
 
     @NotNull
     private String firstName;

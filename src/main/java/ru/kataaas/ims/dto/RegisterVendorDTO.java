@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
@@ -18,6 +19,10 @@ public class RegisterVendorDTO {
     @Email
     @NotNull
     private String email;
+
+    @NotNull
+    @Pattern(regexp = "\\+7-\\d{3}-\\d{3}-\\d{2}-\\d{2}", message = "must be +7-***-***-**-**")
+    private String phoneNumber;
 
     @NotNull
     @Size(min = 8, max = 24)
