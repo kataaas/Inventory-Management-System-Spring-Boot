@@ -7,7 +7,6 @@ import ru.kataaas.ims.dto.RegisterVendorDTO;
 import ru.kataaas.ims.dto.VendorDTO;
 import ru.kataaas.ims.entity.VendorEntity;
 import ru.kataaas.ims.mapper.VendorMapper;
-import ru.kataaas.ims.repository.RoleRepository;
 import ru.kataaas.ims.repository.VendorRepository;
 
 import java.util.Optional;
@@ -17,18 +16,14 @@ public class VendorService {
 
     private final VendorMapper vendorMapper;
 
-    private final RoleRepository roleRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     private final VendorRepository vendorRepository;
 
     public VendorService(VendorMapper vendorMapper,
-                         RoleRepository roleRepository,
                          @Lazy PasswordEncoder passwordEncoder,
                          VendorRepository vendorRepository) {
         this.vendorMapper = vendorMapper;
-        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.vendorRepository = vendorRepository;
     }
@@ -41,6 +36,10 @@ public class VendorService {
         return vendorRepository.findByEmail(email);
     }
 
+    public VendorEntity findByPhoneNumber(String phoneNumber) {
+        return vendorRepository.findByPhoneNumber(phoneNumber);
+    }
+
     public VendorDTO findByName(String name) {
         Optional<VendorEntity> vendor = vendorRepository.findByName(name);
         return vendor.map(vendorMapper::toVendorDTO).orElse(null);
@@ -50,8 +49,8 @@ public class VendorService {
         VendorEntity vendor = new VendorEntity();
         vendor.setName(registerVendorDTO.getName());
         vendor.setEmail(registerVendorDTO.getEmail());
+        vendor.setPhoneNumber(registerVendorDTO.getPhoneNumber());
         vendor.setPassword(passwordEncoder.encode(registerVendorDTO.getPassword()));
-        vendor.getRoles().add(roleRepository.findByName("ROLE_VENDOR"));
 
         VendorEntity savedVendor = vendorRepository.save(vendor);
         return vendorMapper.toVendorDTO(savedVendor);

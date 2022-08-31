@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.HashSet;
@@ -26,6 +27,11 @@ public class VendorEntity {
     @NotNull
     @Column(unique = true)
     private String email;
+
+    @NotNull
+    @Column(unique = true)
+    @Pattern(regexp = "\\+7-\\d{3}-\\d{3}-\\d{2}-\\d{2}")
+    private String phoneNumber;
 
     @NotNull
     @Size(min = 8)
