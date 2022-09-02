@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.kataaas.ims.entity.UserEntity;
 import ru.kataaas.ims.entity.VendorEntity;
+import ru.kataaas.ims.utils.ERole;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,22 +28,30 @@ public class CustomPersonDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String phoneNumberAndRole) throws UsernameNotFoundException {
-        String[] arr = phoneNumberAndRole.split(":");
-        String phoneNumber = arr[0];
-        String role = arr[1];
-        System.out.println(phoneNumber + " " + role);
-        if (role.equalsIgnoreCase("USER")) {
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        UserEntity user = userService.findByPhoneNumber(login);
+        if (user != null) {
+            return new User(login, user.getPassword(), mapRolesToAuthorities("ROLE_USER"));
+        }
+        VendorEntity vendor = vendorService.findByEmail(login);
+        if (vendor != null) {
+            return new User(login, vendor.getPassword(), mapRolesToAuthorities("ROLE_VENDOR"));
+        }
+        throw new UsernameNotFoundException(login);
+    }
+
+    public UserDetails loadByPhoneNumberAndRole(String phoneNumber, ERole role) throws UsernameNotFoundException {
+        if (role == ERole.ROLE_USER) {
             UserEntity user = userService.findByPhoneNumber(phoneNumber);
             if (user == null) throw new UsernameNotFoundException(phoneNumber);
-            return new User(phoneNumberAndRole, user.getPassword(), mapRolesToAuthorities("ROLE_USER"));
+            return new User(phoneNumber, user.getPassword(), mapRolesToAuthorities(role.name()));
         }
-        if (role.equalsIgnoreCase("VENDOR")) {
+        if (role == ERole.ROLE_VENDOR) {
             VendorEntity vendor = vendorService.findByPhoneNumber(phoneNumber);
             if (vendor == null) throw new UsernameNotFoundException(phoneNumber);
-            return new User(phoneNumberAndRole, vendor.getPassword(), mapRolesToAuthorities("ROLE_VENDOR"));
+            return new User(phoneNumber, vendor.getPassword(), mapRolesToAuthorities(role.name()));
         }
-        return null;
+        throw new UsernameNotFoundException(phoneNumber);
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(String role) {

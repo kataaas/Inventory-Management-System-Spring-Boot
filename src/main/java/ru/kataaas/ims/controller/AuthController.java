@@ -16,12 +16,14 @@ import ru.kataaas.ims.mapper.VendorMapper;
 import ru.kataaas.ims.service.CustomPersonDetailsService;
 import ru.kataaas.ims.service.UserService;
 import ru.kataaas.ims.service.VendorService;
+import ru.kataaas.ims.utils.ERole;
 import ru.kataaas.ims.utils.JwtUtil;
 import ru.kataaas.ims.utils.StaticVariable;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -60,16 +62,16 @@ public class AuthController {
     @PostMapping("/user/auth")
     public AuthUserResponse createAuthenticationTokenForUser(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         authenticate(loginDTO.getLogin(), loginDTO.getPassword());
-        UserEntity user = userService.findByPhoneNumber(loginDTO.getLogin().split(":")[0]);
-        String token = generateJwtAuthToken(loginDTO.getLogin(), response);
+        UserEntity user = userService.findByPhoneNumber(loginDTO.getLogin());
+        String token = generateJwtAuthToken(loginDTO.getLogin(), ERole.ROLE_USER, response);
         return userMapper.toAuthResponse(user, token);
     }
 
     @PostMapping("/vendor/auth")
     public AuthUserResponse createAuthenticationTokenForVendor(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
         authenticate(loginDTO.getLogin(), loginDTO.getPassword());
-        VendorEntity vendor = vendorService.findByPhoneNumber(loginDTO.getLogin().split(":")[0]);
-        String token = generateJwtAuthToken(loginDTO.getLogin(), response);
+        VendorEntity vendor = vendorService.findByPhoneNumber(loginDTO.getLogin());
+        String token = generateJwtAuthToken(loginDTO.getLogin(), ERole.ROLE_VENDOR, response);
         return vendorMapper.toAuthResponse(vendor, token);
     }
 
@@ -94,8 +96,8 @@ public class AuthController {
         }
     }
 
-    private String generateJwtAuthToken(String login, HttpServletResponse response) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+    private String generateJwtAuthToken(String login, ERole role, HttpServletResponse response) {
+        UserDetails userDetails = userDetailsService.loadByPhoneNumberAndRole(login, role);
         String token = jwtUtil.generateJwtToken(userDetails);
         Cookie jwtAuthToken = new Cookie(StaticVariable.SECURE_COOKIE, token);
         jwtAuthToken.setHttpOnly(true);

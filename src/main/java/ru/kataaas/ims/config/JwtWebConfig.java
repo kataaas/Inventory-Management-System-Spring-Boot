@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 import ru.kataaas.ims.service.CustomPersonDetailsService;
+import ru.kataaas.ims.utils.ERole;
 import ru.kataaas.ims.utils.JwtUtil;
 import ru.kataaas.ims.utils.StaticVariable;
 
@@ -33,6 +34,7 @@ public class JwtWebConfig extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String login;
+        String role;
         String jwtToken = null;
         Cookie cookie = WebUtils.getCookie(request, StaticVariable.SECURE_COOKIE);
         if (cookie != null) {
@@ -40,8 +42,9 @@ public class JwtWebConfig extends OncePerRequestFilter {
         }
         if (jwtToken != null) {
             login = jwtUtil.getLoginFromToken(jwtToken);
+            role = jwtUtil.getRoleFromToken(jwtToken);
             try {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(login);
+                UserDetails userDetails = userDetailsService.loadByPhoneNumberAndRole(login, ERole.valueOf(role));
                 if (jwtUtil.isValidityToken(jwtToken, userDetails)) {
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(auth);
