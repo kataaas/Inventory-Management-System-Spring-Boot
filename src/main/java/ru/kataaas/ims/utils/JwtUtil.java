@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 @Component
@@ -22,6 +23,7 @@ public class JwtUtil {
         String login = userDetails.getUsername();
         return Jwts.builder()
                 .setSubject(login)
+                .claim("Role", userDetails.getAuthorities().stream().iterator().next().getAuthority())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET_TOKEN)
@@ -35,6 +37,10 @@ public class JwtUtil {
 
     public String getLoginFromToken(String token) {
         return getAllClaimsFromToken(token).getSubject();
+    }
+
+    public String getRoleFromToken(String token) {
+        return getAllClaimsFromToken(token).get("Role").toString();
     }
 
     private boolean isTokenExpired(String token) {
