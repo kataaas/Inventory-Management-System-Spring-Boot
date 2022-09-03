@@ -28,12 +28,14 @@ public class OrderEntity {
     @JoinColumn(name = "product_id")
     private ProductEntity product;
 
-    @Min(0)
+    @Min(1)
     private int quantity;
 
     @CreationTimestamp
     private Date createdAt;
 
     private Date orderTime;
+
+    private boolean delivered;
 
 }

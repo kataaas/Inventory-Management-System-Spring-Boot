@@ -10,7 +10,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.kataaas.ims.service.CustomPersonDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -18,15 +17,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtWebConfig JwtWebConfig;
 
-    private final CustomPersonDetailsService userDetailsService;
-
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     public WebSecurityConfig(JwtWebConfig JwtWebConfig,
-                             CustomPersonDetailsService userDetailsService,
                              JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.JwtWebConfig = JwtWebConfig;
-        this.userDetailsService = userDetailsService;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     }
 
@@ -53,6 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/product/**/").permitAll()
                 .antMatchers("/api/v1/vendor").hasRole("VENDOR")
                 .antMatchers("/api/v1/user/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/v1/orders/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
