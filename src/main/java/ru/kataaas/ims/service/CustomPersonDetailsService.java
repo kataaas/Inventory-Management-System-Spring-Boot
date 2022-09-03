@@ -31,11 +31,7 @@ public class CustomPersonDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         UserEntity user = userService.findByPhoneNumber(login);
         if (user != null) {
-            return new User(login, user.getPassword(), mapRolesToAuthorities("ROLE_USER"));
-        }
-        VendorEntity vendor = vendorService.findByEmail(login);
-        if (vendor != null) {
-            return new User(login, vendor.getPassword(), mapRolesToAuthorities("ROLE_VENDOR"));
+            return new User(login, user.getPassword(), mapRolesToAuthorities(ERole.ROLE_USER.name()));
         }
         throw new UsernameNotFoundException(login);
     }

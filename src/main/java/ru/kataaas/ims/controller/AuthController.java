@@ -23,7 +23,6 @@ import ru.kataaas.ims.utils.StaticVariable;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -103,7 +102,7 @@ public class AuthController {
         jwtAuthToken.setHttpOnly(true);
         jwtAuthToken.setSecure(false);
         jwtAuthToken.setPath("/");
-        jwtAuthToken.setMaxAge(604800000); // 7 days
+        jwtAuthToken.setMaxAge(2592000); // 30 days
         response.addCookie(jwtAuthToken);
         return token;
     }
