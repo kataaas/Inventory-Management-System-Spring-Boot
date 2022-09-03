@@ -32,8 +32,8 @@ public class ProductController {
                                               @RequestParam(defaultValue = "1") int quantity) {
         if (quantity > productService.getQuantityById(id)) return ResponseEntity.badRequest().build();
         try {
-            String login = request.getUserPrincipal().getName();
-            Long userId = userService.findIdByPhoneNumber(login);
+            String phoneNumber = request.getRemoteUser();
+            Long userId = userService.findIdByPhoneNumber(phoneNumber);
             cartService.addProductToCart(userId, id, quantity);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
