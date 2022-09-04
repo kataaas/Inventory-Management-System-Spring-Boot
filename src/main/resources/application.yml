@@ -11,3 +11,6 @@ spring:
     open-in-view: true
     hibernate:
       ddl-auto: update
+  sql:
+    init:
+      mode: always
