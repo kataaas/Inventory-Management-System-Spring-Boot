@@ -1,6 +1,7 @@
 package ru.kataaas.ims.service;
 
 import org.springframework.stereotype.Service;
+import ru.kataaas.ims.dto.CategoryDTO;
 import ru.kataaas.ims.dto.CreateProductDTO;
 import ru.kataaas.ims.dto.ProductDTO;
 import ru.kataaas.ims.entity.CartProductsEntity;
@@ -14,6 +15,7 @@ import ru.kataaas.ims.repository.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -67,6 +69,11 @@ public class ProductService {
 
     public CategoryEntity getCategoryBySubcategory(String subcategory) {
         return categoryRepository.getBySubcategory(subcategory);
+    }
+
+    public List<CategoryDTO> fetchAllCategories() {
+        return categoryRepository.findAll().stream()
+                .map(productMapper::toCategoryDTO).collect(Collectors.toList());
     }
 
     public int getQuantityById(Long id) {
