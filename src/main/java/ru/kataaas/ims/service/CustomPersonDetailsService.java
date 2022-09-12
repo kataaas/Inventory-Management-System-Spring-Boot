@@ -33,6 +33,10 @@ public class CustomPersonDetailsService implements UserDetailsService {
         if (user != null) {
             return new User(login, user.getPassword(), mapRolesToAuthorities(ERole.ROLE_USER.name()));
         }
+        VendorEntity vendor = vendorService.findByPhoneNumber(login);
+        if (vendor != null) {
+            return new User(login, vendor.getPassword(), mapRolesToAuthorities(ERole.ROLE_VENDOR.name()));
+        }
         throw new UsernameNotFoundException(login);
     }
 
