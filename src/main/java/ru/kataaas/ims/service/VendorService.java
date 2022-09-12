@@ -28,6 +28,10 @@ public class VendorService {
         this.vendorRepository = vendorRepository;
     }
 
+    public Long findIdByName(String name) {
+        return vendorRepository.findIdByName(name);
+    }
+
     public Long findIdByPhoneNumber(String phoneNumber) {
         return vendorRepository.findIdByPhoneNumber(phoneNumber);
     }

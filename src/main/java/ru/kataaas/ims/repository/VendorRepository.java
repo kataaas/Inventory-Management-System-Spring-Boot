@@ -9,6 +9,9 @@ import java.util.Optional;
 
 public interface VendorRepository extends JpaRepository<VendorEntity, Long> {
 
+    @Query(value = "SELECT v.id FROM vendor v WHERE v.name = :name", nativeQuery = true)
+    Long findIdByName(@Param("name") String name);
+
     @Query(value = "SELECT v.id FROM vendor v WHERE v.phone_number = :phoneNumber", nativeQuery = true)
     Long findIdByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 
