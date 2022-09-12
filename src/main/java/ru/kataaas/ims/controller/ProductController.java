@@ -5,17 +5,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kataaas.ims.dto.CategoryDTO;
 import ru.kataaas.ims.dto.CreateProductDTO;
+import ru.kataaas.ims.dto.ProductResponse;
 import ru.kataaas.ims.service.CartService;
 import ru.kataaas.ims.service.ProductService;
 import ru.kataaas.ims.service.UserService;
 import ru.kataaas.ims.service.VendorService;
+import ru.kataaas.ims.utils.StaticVariable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/product")
+@RequestMapping("/api/v1/products")
 public class ProductController {
 
     private final CartService cartService;
@@ -34,6 +36,13 @@ public class ProductController {
         this.userService = userService;
         this.vendorService = vendorService;
         this.productService = productService;
+    }
+
+    @GetMapping("/vendor/{name}")
+    public ProductResponse fetchProductsByVendor(@PathVariable String name,
+                                                 @RequestParam(value = "pageNo", defaultValue = StaticVariable.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+                                                 @RequestParam(value = "pageSize", defaultValue = StaticVariable.DEFAULT_PAGE_SIZE, required = false) int pageSize) {
+        return productService.fetchProductsByVendorName(name, pageNo, pageSize);
     }
 
     @GetMapping("/{id}/addToCart")

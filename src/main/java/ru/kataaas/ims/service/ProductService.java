@@ -1,9 +1,13 @@
 package ru.kataaas.ims.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.kataaas.ims.dto.CategoryDTO;
 import ru.kataaas.ims.dto.CreateProductDTO;
 import ru.kataaas.ims.dto.ProductDTO;
+import ru.kataaas.ims.dto.ProductResponse;
 import ru.kataaas.ims.entity.CartProductsEntity;
 import ru.kataaas.ims.entity.CategoryEntity;
 import ru.kataaas.ims.entity.ProductEntity;
@@ -44,6 +48,11 @@ public class ProductService {
 
     public Set<ProductEntity> findProductsByIds(Set<Long> ids) {
         return productRepository.findByIdIsIn(ids);
+    }
+
+    public ProductResponse fetchProductsByVendorName(String vendorName, int pageNo, int pageSize) {
+        Page<ProductEntity> products = productRepository.findAllByVendor_Name(vendorName, PageRequest.of(pageNo, pageSize));
+        return productMapper.toProductResponse(products);
     }
 
     public void setQuantityProduct(Long id, int quantity) {
