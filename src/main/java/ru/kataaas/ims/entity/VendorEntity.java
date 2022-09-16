@@ -38,6 +38,9 @@ public class VendorEntity {
     private String password;
 
     @CreationTimestamp
+    private Date lastModifiedDateTime;
+
+    @CreationTimestamp
     private Date createdAt;
 
     @OneToMany(mappedBy = "vendor")

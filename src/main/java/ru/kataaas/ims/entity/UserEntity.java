@@ -44,6 +44,9 @@ public class UserEntity {
     private String city;
 
     @CreationTimestamp
+    private Date lastModifiedDateTime;
+
+    @CreationTimestamp
     private Date createdAt;
 
     @OneToOne(mappedBy = "user")

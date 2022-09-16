@@ -29,6 +29,9 @@ public class ProductEntity {
     private int quantity;
 
     @CreationTimestamp
+    private Date lastModifiedDateTime;
+
+    @CreationTimestamp
     private Date createdAt;
 
     @NotNull
