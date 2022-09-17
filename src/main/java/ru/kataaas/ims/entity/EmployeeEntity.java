@@ -19,11 +19,12 @@ public class EmployeeEntity {
     private Long id;
 
     @NotNull
+    @Size(min = 8)
     @Column(unique = true)
     private String login;
 
     @NotNull
-    @Size(min = 8)
+    @Size(min = 8, max = 24)
     private String password;
 
     @NotNull
