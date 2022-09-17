@@ -1,5 +1,6 @@
 package ru.kataaas.ims.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -7,13 +8,17 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import ru.kataaas.ims.dto.AuthUserResponse;
+import ru.kataaas.ims.dto.AuthResponse;
+import ru.kataaas.ims.dto.LoginByPhoneNumberDTO;
 import ru.kataaas.ims.dto.LoginDTO;
+import ru.kataaas.ims.entity.EmployeeEntity;
 import ru.kataaas.ims.entity.UserEntity;
 import ru.kataaas.ims.entity.VendorEntity;
+import ru.kataaas.ims.mapper.EmployeeMapper;
 import ru.kataaas.ims.mapper.UserMapper;
 import ru.kataaas.ims.mapper.VendorMapper;
 import ru.kataaas.ims.service.CustomPersonDetailsService;
+import ru.kataaas.ims.service.EmployeeService;
 import ru.kataaas.ims.service.UserService;
 import ru.kataaas.ims.service.VendorService;
 import ru.kataaas.ims.utils.ERole;
@@ -26,6 +31,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
+@AllArgsConstructor
 public class AuthController {
 
     private final JwtUtil jwtUtil;
@@ -38,28 +44,16 @@ public class AuthController {
 
     private final VendorService vendorService;
 
+    private final EmployeeMapper employeeMapper;
+
+    private final EmployeeService employeeService;
+
     private final AuthenticationManager authenticationManager;
 
     private final CustomPersonDetailsService userDetailsService;
 
-    public AuthController(JwtUtil jwtUtil,
-                          UserMapper userMapper,
-                          UserService userService,
-                          VendorMapper vendorMapper,
-                          VendorService vendorService,
-                          AuthenticationManager authenticationManager,
-                          CustomPersonDetailsService userDetailsService) {
-        this.jwtUtil = jwtUtil;
-        this.userMapper = userMapper;
-        this.userService = userService;
-        this.vendorMapper = vendorMapper;
-        this.vendorService = vendorService;
-        this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
-    }
-
     @PostMapping("/user/auth")
-    public AuthUserResponse createAuthenticationTokenForUser(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
+    public AuthResponse createAuthenticationTokenForUser(@Valid @RequestBody LoginByPhoneNumberDTO loginDTO, HttpServletResponse response) {
         authenticate(loginDTO.getLogin(), loginDTO.getPassword());
         UserEntity user = userService.findByPhoneNumber(loginDTO.getLogin());
         String token = generateJwtAuthToken(loginDTO.getLogin(), ERole.ROLE_USER, response);
@@ -67,11 +61,19 @@ public class AuthController {
     }
 
     @PostMapping("/vendor/auth")
-    public AuthUserResponse createAuthenticationTokenForVendor(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
+    public AuthResponse createAuthenticationTokenForVendor(@Valid @RequestBody LoginByPhoneNumberDTO loginDTO, HttpServletResponse response) {
         authenticate(loginDTO.getLogin(), loginDTO.getPassword());
         VendorEntity vendor = vendorService.findByPhoneNumber(loginDTO.getLogin());
         String token = generateJwtAuthToken(loginDTO.getLogin(), ERole.ROLE_VENDOR, response);
         return vendorMapper.toAuthResponse(vendor, token);
+    }
+
+    @PostMapping("/employee/auth")
+    public AuthResponse createAuthenticationTokenForEmployee(@Valid @RequestBody LoginDTO loginDTO, HttpServletResponse response) {
+        authenticate(loginDTO.getLogin(), loginDTO.getPassword());
+        EmployeeEntity employee = employeeService.findByLogin(loginDTO.getLogin());
+        String token = generateJwtAuthToken(loginDTO.getLogin(), ERole.ROLE_EMPLOYEE, response);
+        return employeeMapper.toAuthResponse(employee, token);
     }
 
     @GetMapping("/logout")
@@ -96,7 +98,7 @@ public class AuthController {
     }
 
     private String generateJwtAuthToken(String login, ERole role, HttpServletResponse response) {
-        UserDetails userDetails = userDetailsService.loadByPhoneNumberAndRole(login, role);
+        UserDetails userDetails = userDetailsService.loadByLoginAndRole(login, role);
         String token = jwtUtil.generateJwtToken(userDetails);
         Cookie jwtAuthToken = new Cookie(StaticVariable.SECURE_COOKIE, token);
         jwtAuthToken.setHttpOnly(true);
