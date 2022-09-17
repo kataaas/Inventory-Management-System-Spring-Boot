@@ -1,7 +1,7 @@
 package ru.kataaas.ims.mapper;
 
 import org.springframework.stereotype.Service;
-import ru.kataaas.ims.dto.AuthUserResponse;
+import ru.kataaas.ims.dto.AuthResponse;
 import ru.kataaas.ims.dto.UserDTO;
 import ru.kataaas.ims.entity.UserEntity;
 
@@ -20,11 +20,11 @@ public class UserMapper {
         return userDTO;
     }
 
-    public AuthUserResponse toAuthResponse(UserEntity user, String token) {
-        AuthUserResponse authUserResponse = new AuthUserResponse();
-        authUserResponse.setId(user.getId());
-        authUserResponse.setLogin(user.getPhoneNumber());
-        authUserResponse.setAccessToken(token);
-        return authUserResponse;
+    public AuthResponse toAuthResponse(UserEntity user, String token) {
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setId(user.getId());
+        authResponse.setLogin(user.getPhoneNumber());
+        authResponse.setAccessToken(token);
+        return authResponse;
     }
 }

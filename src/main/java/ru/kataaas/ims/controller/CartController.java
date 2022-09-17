@@ -45,12 +45,10 @@ public class CartController {
     @GetMapping("/buy")
     public ResponseEntity<?> orderProducts(@RequestParam("id") Set<Long> ids, HttpServletRequest request) {
         try {
-            String phoneNumber = request.getRemoteUser();
-            Long userId = userService.findIdByPhoneNumber(phoneNumber);
+            Long userId = userService.findIdByPhoneNumber(request.getRemoteUser());
             cartService.orderProducts(ids, userId);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
         }
     }

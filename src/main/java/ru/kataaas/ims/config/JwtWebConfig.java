@@ -44,7 +44,7 @@ public class JwtWebConfig extends OncePerRequestFilter {
             login = jwtUtil.getLoginFromToken(jwtToken);
             role = jwtUtil.getRoleFromToken(jwtToken);
             try {
-                UserDetails userDetails = userDetailsService.loadByPhoneNumberAndRole(login, ERole.valueOf(role));
+                UserDetails userDetails = userDetailsService.loadByLoginAndRole(login, ERole.valueOf(role));
                 if (jwtUtil.isValidityToken(jwtToken, userDetails)) {
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(auth);

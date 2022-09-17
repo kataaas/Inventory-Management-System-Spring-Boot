@@ -3,7 +3,7 @@ package ru.kataaas.ims.dto;
 import lombok.Data;
 
 @Data
-public class AuthUserResponse {
+public class AuthResponse {
 
     private Long id;
 
