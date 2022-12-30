@@ -27,26 +27,21 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
-@AllArgsConstructor
 public class AuthController {
 
     private final JwtUtil jwtUtil;
 
-    private final UserMapper userMapper;
-
-    private final UserService userService;
-
-    private final VendorMapper vendorMapper;
-
-    private final VendorService vendorService;
-
-    private final EmployeeMapper employeeMapper;
-
-    private final EmployeeService employeeService;
-
     private final AuthenticationManager authenticationManager;
 
     private final CustomPersonDetailsService userDetailsService;
+
+    public AuthController(JwtUtil jwtUtil,
+                          AuthenticationManager authenticationManager,
+                          CustomPersonDetailsService userDetailsService) {
+        this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
+    }
 
     @PostMapping("/user/auth")
     public String createAuthenticationTokenForUser(@Valid @RequestBody LoginByPhoneNumberDTO loginDTO, HttpServletResponse response) {
